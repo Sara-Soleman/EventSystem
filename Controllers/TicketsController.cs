@@ -24,7 +24,7 @@ namespace Event_System.Controllers
         public async Task<IActionResult> GetEventAsync()
         {
             
-            var userId = User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "typ")?.Value;
             getTicketDto g = new getTicketDto(userId);
 
             var tickets = await _mediator.Send(g);
@@ -42,7 +42,7 @@ namespace Event_System.Controllers
         [HttpPost("BookTicket")]
         public async Task<ActionResult> BookTicketAsync(int eventId)
         {
-            var userId = User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "typ")?.Value;
             _logger.LogInformation("****************  " + userId);
             TicketDto1 e = new TicketDto1(userId, eventId);
 
@@ -56,7 +56,7 @@ namespace Event_System.Controllers
         public async Task<ActionResult> CancelTicketAsync(int eventId)
         {
 
-            var userId = User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "typ")?.Value;
             _logger.LogInformation("****************  " + User);
             TicketDto e = new TicketDto(userId, eventId);
 

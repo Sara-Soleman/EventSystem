@@ -117,11 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="TheEventCreated" xml:space="preserve">
-    <value>The Event Created Successfully</value>
-    <comment>mmmmmmmmmm</comment>
+  <data name="Hi" xml:space="preserve">
+    <value>HELLO</value>
   </data>
-  <data name="TheEventWasNotCreated" xml:space="preserve">
-    <value>The Event Was Not Created</value>
+  <data name="TheEventCreated" xml:space="preserve">
+    <value> skjs ksk          88888888888888888888**-*--*-</value>
   </data>
 </root>

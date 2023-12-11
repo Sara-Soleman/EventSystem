@@ -24,20 +24,21 @@ namespace Event_System.Persistance.Services
         {
             var claims = new[]
           {
-                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
+                 
+                 new Claim(JwtRegisteredClaimNames.Typ, user.Id),
                  new Claim(JwtRegisteredClaimNames.Name, user.Full_Name),
                  new Claim(JwtRegisteredClaimNames.Jti,  _jwtOptions.JtiGenerator()),
                  new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(),
                  ClaimValueTypes.Integer64),
            };
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]!));
-            var _TokenExpiryTimeInHour = Convert.ToInt64(_configuration["Jwt:ExpiresInMinutes"]);
+            var _TokenExpiryTimeInHour = Convert.ToInt64(_configuration["Jwt:Expires"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Issuer = _configuration["Jwt:Issuer"],
                 Audience = _configuration["Jwt:Audience"],
-                //Expires = DateTime.UtcNow.AddHours(_TokenExpiryTimeInHour),
-                Expires = DateTime.UtcNow.AddMinutes(1),
+                Expires = DateTime.UtcNow.AddHours(_TokenExpiryTimeInHour),
+                //Expires = DateTime.UtcNow.AddMinutes(1),
                 SigningCredentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256),
                 Subject = new ClaimsIdentity(claims)
             };

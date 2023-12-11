@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
+using System;
 using System.Security.Claims;
 
 namespace Event_System.Controllers
@@ -34,22 +35,22 @@ namespace Event_System.Controllers
         public async Task<ActionResult> CreateEventAsync([FromBody] EventDto command)
         {
            
-            var userId = User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "typ")?.Value;
             _logger.LogInformation("*******************  " + userId);
             EventDto1 e = new EventDto1(userId , command);
            
-            var responce = await _mediator.Send(e ,cancellationToken: HttpContext.RequestAborted);
-            var localizedString = _localizer[responce];
-            _logger.LogError("*---***--*-*- " + localizedString + "    "+ responce);
-            return Ok(new { Message = localizedString });
+            var response = await _mediator.Send(e ,cancellationToken: HttpContext.RequestAborted);
+            var localizedString = _localizer[response];
+            _logger.LogError("*---***--*-*- " + localizedString + "    "+ response);
+            return Ok(new { Message = localizedString/*.Value*/ });
         }
 
         [Authorize(AuthenticationSchemes = "Bearer")]
         [HttpPut("UpdateEvent")]
         public async Task<ActionResult> UpdateEventAsync([FromBody] EventDto command , int eventId)
         {
-
-            var userId = User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+            
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "typ")?.Value;
             _logger.LogInformation("*******************  " + userId);
             EventUpdate e = new EventUpdate(userId, eventId, command);
 
@@ -63,7 +64,7 @@ namespace Event_System.Controllers
         public async Task<ActionResult> DeleteEventAsync( int eventId)
         {
 
-            var userId = User.Claims.FirstOrDefault(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "typ")?.Value;
             _logger.LogInformation("*******************  " + userId);
             EventDelete e = new EventDelete(userId, eventId);
 

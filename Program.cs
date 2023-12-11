@@ -1,5 +1,6 @@
 using Event_System.Application;
 using Event_System.Application.QueryHandeller;
+using Event_System.Controllers;
 using Event_System.Core.Entity.DTOs;
 using Event_System.Core.Entity.Models;
 using Event_System.Core.Entity.UserModel;
@@ -12,8 +13,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Collections.Generic;
 using System.Globalization;
@@ -23,26 +26,35 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
-
-// Add services to the container.
-//builder.Services.AddControllersWithViews()
-//        .AddDataAnnotationsLocalization();
+builder.Services.AddControllers();
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-builder.Services.AddControllers()
-            .AddDataAnnotationsLocalization(options =>
-            {
-                options.DataAnnotationLocalizerProvider = (type, factory) =>
-                    factory.Create(typeof(Program));
-            });
-
-//builder.Services.Configure<RequestLocalizationOptions>(options =>
+//builder.Services.AddRequestLocalization(options =>
 //{
-//    var supportedCultures = new[] { new CultureInfo("en-US"), new CultureInfo("ar-AR") };
-//    options.DefaultRequestCulture = new RequestCulture("en-US");
-//    options.SupportedCultures = supportedCultures;
-//    options.SupportedUICultures = supportedCultures;
+//    options.DefaultRequestCulture = new RequestCulture("en-US"); // Set default culture
+//    options.SupportedCultures = new List<CultureInfo>
+//    {
+//        new CultureInfo("en-US"), // English
+//        new CultureInfo("ar-AR")  // Arabic
+//    };
+//    options.SupportedUICultures = new List<CultureInfo>
+//    {
+//        new CultureInfo("en-US"),
+//        new CultureInfo("ar-AR")
+//    };
 //});
-//builder.Services.AddControllers();
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[]
+    {
+            new CultureInfo("en-US"),
+            new CultureInfo("ar-AR")
+        };
+
+    options.DefaultRequestCulture = new RequestCulture("en-US");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+});
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -111,13 +123,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-var supportedCultures = new[] { new CultureInfo("en-US"), new CultureInfo("fr-FR") };
-app.UseRequestLocalization(new RequestLocalizationOptions
-{
-    DefaultRequestCulture = new RequestCulture("en-US"),
-    SupportedCultures = supportedCultures,
-    SupportedUICultures = supportedCultures
-});
+app.UseRequestLocalization(app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value);
+
 
 app.UseHttpsRedirection();
 
